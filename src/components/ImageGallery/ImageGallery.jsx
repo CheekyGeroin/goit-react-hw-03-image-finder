@@ -1,76 +1,34 @@
-// import PropTypes from 'prop-types';
-import { Component } from 'react';
-import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
-import { Loader } from '../Loader/Loader';
-import api from '../api/Image-api';
-import { toast } from 'react-toastify';
-import { Button } from 'components/Button/Button';
-import {ImageGalleryList} from './ImageGallery.styled'
+import PropTypes from 'prop-types';
+import { ImageGalleryList } from './ImageGallery.styled';
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
-class ImageGallery extends Component {
-  state = {
-    imagesArr: [],
-    page: 1,
-    error: null,
-    status: 'idle'
-  };
+export const ImageGallery = ({ images, onClick }) => {
+  return (
+    <ImageGalleryList>
+      {images.length > 0 &&
+        images.map(({ webformatURL, id, largeImageURL, tags }) => {
+          return (
+            <ImageGalleryItem
+              key={id}
+              image={webformatURL}
+              largeImage={largeImageURL}
+              name={tags}
+              onClick={onClick}
+            ></ImageGalleryItem>
+          );
+        })}
+    </ImageGalleryList>
+  );
+};
 
-  componentDidUpdate(prevProps, prevState) {
-    const { page, imagesArr,  } = this.state;
-    const { item } = this.props;
-    if (prevProps.item !== item) {
-      try {
-        this.setState({ status: 'pending'});
-        api
-          .fetchImages(item, page)
-          .then(({ hits }) => {
-            this.setState({ imagesArr: [...imagesArr, ...hits], status: 'successfully' });
-          })
-          .finally(this.setState({ loading: false }));
-      } catch (error) {
-        this.setState({ error, status: 'rejected' });
-      }
-    }
-
-    if (prevState.page !== page) {
-      try {
-        this.setState({ status: 'pending'});
-        api
-          .fetchImages(item, page)
-          .then(({ hits }) => {
-            this.setState({ imagesArr: [...imagesArr, ...hits], status: 'successfully' });
-          })
-          .finally(this.setState({ loading: false }));
-      } catch (error) {
-        this.setState({ error, status: 'rejected' });
-      }
-    }
-  }
-
-  handlePage = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1
-    }))
-  }
-
-  render() {
-    const { imagesArr,  status } = this.state;
-    return (
-      <div>
-        {status === 'pending' && <Loader />}
-        {status === 'rejected' && toast.error(`We can't find any images by your key-word`)}
-        <ImageGalleryList>
-        
-        
-        {status === 'successfully' && (<ImageGalleryItem images={imagesArr} />)}
-        
-      </ImageGalleryList>
-      {imagesArr.length > 0 && status !== 'pending' && <Button onClick={ this.handlePage} />}
-      </div>
-    );
-  }
-}
-
-export default ImageGallery;
-
-//         <Button />
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.exact({
+      id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+    })
+  ),
+  onClick: PropTypes.func.isRequired,
+};
