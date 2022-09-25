@@ -1,17 +1,23 @@
 import PropTypes from 'prop-types';
 
-export const ImageGalleryItem = ({ images }) => {
+export const ImageGalleryItem = ({ id, tags, largeImage, smallImage }) => {
   return (
-      images.map(({ id, webformatURL, largeImageURL, tags }) => {
-          <li key={id}>
-            <img src={webformatURL} alt={tags} />
-        </li>
-    })
-  );
-};
+    <li key={id}>
+      <img src={smallImage} alt={tags} />
+    </li>
+  )
+
+}
 
 // ImageGalleryItem.propTypes = {
-//   id: PropTypes.number.isRequired,
+//   images: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       id: PropTypes.number.isRequired,
 //   smallImage: PropTypes.string.isRequired,
 //   largeImage: PropTypes.string.isRequired,
+//   tags: PropTypes.string.isRequired,
+      
+//     }),
+//   ),
+  
 // };
