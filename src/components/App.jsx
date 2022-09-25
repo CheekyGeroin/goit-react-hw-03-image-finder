@@ -21,11 +21,11 @@ class App extends Component {
   }
 
   render() {
-    const {imagesName, page,} =this.state
+    const {imagesName} =this.state
     return (
       <div>
         <SearchBar onSubmit={this.getImagesName} />
-        <ImageGallery item={imagesName} page={page} />
+        <ImageGallery item={imagesName} />
         <ToastContainer autoClose={2000} />
       </div>
     );

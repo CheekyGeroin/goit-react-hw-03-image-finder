@@ -2,46 +2,66 @@
 import { Component } from 'react';
 import { ImageGalleryItem } from '../ImageGalleryItem/ImageGalleryItem';
 import { Loader } from '../Loader/Loader';
-// import { Button } from '../Button/Button';
 import api from '../api/Image-api';
 import { toast } from 'react-toastify';
+import { Button } from 'components/Button/Button';
 
 class ImageGallery extends Component {
   state = {
     imagesArr: [],
     page: 1,
-    loading: false,
     error: null,
+    status: 'idle'
   };
-  componentDidMount() {
-    const { page, imagesArr } = this.state;
-    const {item} =this.props
-    try {
-        this.setState({loading: true})
-      api.fetchImages(item, page).then((images) => {
-        console.log(images.hits)
-        for (let i = 0; i <= images.hits.length; i += 1){
-          console.log(i.id)
-        }
-        
-        }).finally( this.setState({loading: false}))
-      } catch (error) {
-        this.setState({error})
-    }
-    }
-    
 
+  componentDidUpdate(prevProps, prevState) {
+    const { page, imagesArr,  } = this.state;
+    const { item } = this.props;
+    if (prevProps.item !== item) {
+      try {
+        this.setState({ status: 'pending'});
+        api
+          .fetchImages(item, page)
+          .then(({ hits }) => {
+            this.setState({ imagesArr: [...imagesArr, ...hits], status: 'successfully' });
+          })
+          .finally(this.setState({ loading: false }));
+      } catch (error) {
+        this.setState({ error, status: 'rejected' });
+      }
+    }
+
+    if (prevState.page !== page) {
+      try {
+        this.setState({ status: 'pending'});
+        api
+          .fetchImages(item, page)
+          .then(({ hits }) => {
+            this.setState({ imagesArr: [...imagesArr, ...hits], status: 'successfully' });
+          })
+          .finally(this.setState({ loading: false }));
+      } catch (error) {
+        this.setState({ error, status: 'rejected' });
+      }
+    }
+  }
+
+  handlePage = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1
+    }))
+  }
 
   render() {
-    const { imagesArr, loading, error } = this.state;
-    return (<div>
-      {loading && <Loader />}
-      {error && toast.error(`We can't find any images by your ke`)}
-          <ImageGalleryItem  images={imagesArr} />
-
-    </div>
-        
-    )
+    const { imagesArr,  status } = this.state;
+    return (
+      <div>
+        {status === 'pending' && <Loader />}
+        {status === 'rejected' && toast.error(`We can't find any images by your key-word`)}
+        {status === 'successfully' && (<ImageGalleryItem images={imagesArr} />)}
+        {imagesArr.length > 0 && status !== 'pending' && <Button onClick={ this.handlePage} />}
+      </div>
+    );
   }
 }
 

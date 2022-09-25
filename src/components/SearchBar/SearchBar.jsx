@@ -8,7 +8,7 @@ class SearchBar extends Component {
   };
 
   handleChange = e => {
-    const { value } = e.currentTarget;
+    const value = e.currentTarget.value.toLowerCase();
       this.setState({ itemName: value });
   };
 
@@ -17,11 +17,6 @@ class SearchBar extends Component {
 
     this.props.onSubmit(this.state);
 
-    this.reset();
-  };
-
-  reset = () => {
-    this.setState({ itemName: '' });
   };
 
   render() {
