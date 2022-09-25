@@ -5,6 +5,7 @@ import { Loader } from '../Loader/Loader';
 import api from '../api/Image-api';
 import { toast } from 'react-toastify';
 import { Button } from 'components/Button/Button';
+import {ImageGalleryList} from './ImageGallery.styled'
 
 class ImageGallery extends Component {
   state = {
@@ -58,8 +59,13 @@ class ImageGallery extends Component {
       <div>
         {status === 'pending' && <Loader />}
         {status === 'rejected' && toast.error(`We can't find any images by your key-word`)}
+        <ImageGalleryList>
+        
+        
         {status === 'successfully' && (<ImageGalleryItem images={imagesArr} />)}
-        {imagesArr.length > 0 && status !== 'pending' && <Button onClick={ this.handlePage} />}
+        
+      </ImageGalleryList>
+      {imagesArr.length > 0 && status !== 'pending' && <Button onClick={ this.handlePage} />}
       </div>
     );
   }

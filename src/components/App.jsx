@@ -2,7 +2,8 @@ import { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from './SearchBar/SearchBar';
-import  ImageGallery  from './ImageGallery/ImageGallery';
+import ImageGallery from './ImageGallery/ImageGallery';
+import {StyledApp} from './App.styled'
 
 // import { Modal } from './Modal/Modal';
 
@@ -23,11 +24,11 @@ class App extends Component {
   render() {
     const {imagesName} =this.state
     return (
-      <div>
+      <StyledApp>
         <SearchBar onSubmit={this.getImagesName} />
         <ImageGallery item={imagesName} />
         <ToastContainer autoClose={2000} />
-      </div>
+      </StyledApp>
     );
   }
 }
