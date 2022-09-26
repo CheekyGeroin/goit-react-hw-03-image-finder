@@ -55,7 +55,7 @@ export const SearchInput = styled.input`
   outline: none;
   padding-left: 4px;
   padding-right: 4px;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
   ::placeholder {
     font: inherit;
     font-size: 18px;
